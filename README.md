@@ -7,6 +7,11 @@
 
 Kaede is an updated version of BuilderGenerator - a .NET Source Generator by MelGrubb, that is designed to add "Builders" to your projects. [Builders](https://en.wikipedia.org/wiki/Builder_pattern) are an object creation pattern, similar to the [Object Mother](https://martinfowler.com/bliki/ObjectMother.html) pattern. Object Mothers and Builders are most commonly used to create objects for testing, but they can be used anywhere you want "canned" objects.
 
+## What is new? ##
+
+* Record type support - Immutable records now work with the Source Generator
+* More soon
+
 For more complete documentation, please see the [documentation site](https://melgrubb.github.io/BuilderGenerator/) or the raw [documentation source](https://github.com/MelGrubb/BuilderGenerator/blob/main/docs/index.md).
 
 ## Installation ##

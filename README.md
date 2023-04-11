@@ -1,6 +1,6 @@
 [![Nuget](https://img.shields.io/nuget/dt/kaede)](https://www.nuget.org/packages/BuilderGenerator/)
 [![GitHub](https://img.shields.io/github/license/am4u/kaede)](https://opensource.org/licenses/MIT)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/MelGrubb/BuilderGenerator/ci)](https://github.com/MelGrubb/BuilderGenerator/actions/workflows/ci.yml)
+[![Build status](https://ci.appveyor.com/api/projects/status/ioq5c465m65hjja2?svg=true)](https://ci.appveyor.com/project/am4u/kaede)
 [![GitHub issues](https://img.shields.io/github/issues/melgrubb/buildergenerator)](https://github.com/MelGrubb/BuilderGenerator/issues)
 
 # kaede - an updated version of BuilderGenerator #
@@ -11,15 +11,41 @@ For more complete documentation, please see the [documentation site](https://mel
 
 ## Installation ##
 
-Kaede is installed as an analyzer via NuGet package (https://www.nuget.org/packages/Kaede/). You can find it through the "Manage NuGet Packages" dialog in Visual Studio, or from the command line.
-
-```ps
-Install-Package Kaede
-```
+Kaede is installed as an analyzer via a NuGet package - for more info on how to install/add this package to your solution: https://www.nuget.org/packages/Kaede/
 
 ## Usage ##
 
-After installation, create a partial class to define your builder in. Decorate it with the ```BuilderFor``` attribute, specifying the type of class that the builder is meant to build (e.g. ```[BuilderFor(typeof(Foo))]```. Define any factory and helper methods in this partial class. Meanwhile, another partial class definition will be auto-generated which contains all the "boring" parts such as the backing fields and "with" methods.
+After the package has been installed into your project:
+
+1. Create a new partial class that will hold your builder methods.
+2. Decorate it with the ```BuilderFor``` attribute, specifying the type of class that the builder is meant to build. For example: 
+```csharp
+[BuilderFor(typeof(Foo))]
+public partial class FooBuilder
+{
+}
+``` 
+3. Rebuild your project. The source generator will run and autogenerate methods in a separate partial class file, for each property in the type you specified in Step 2. 
+
+You can also add factory methods to your partial class which can craft specific data scenarios: 
+
+```csharp
+[BuilderFor(typeof(Amogus))]
+public partial class AmogusBuilder
+{
+    public static AmogusBuilder IsSus()
+    {
+        return new AmogusBuilder()
+            .WithIsSus(true);
+    }
+    
+    public static AmogusBuilder IsNotSus()
+    {
+        return new AmogusBuilder()
+            .WithIsSus(false);
+    }
+}
+``` 
 
 ## Version History ##
 - v1.0

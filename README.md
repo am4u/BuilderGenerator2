@@ -1,11 +1,10 @@
-[![Nuget](https://img.shields.io/nuget/dt/kaede)](https://www.nuget.org/packages/BuilderGenerator/)
-[![GitHub](https://img.shields.io/github/license/am4u/kaede)](https://opensource.org/licenses/MIT)
-[![Build status](https://ci.appveyor.com/api/projects/status/ioq5c465m65hjja2?svg=true)](https://ci.appveyor.com/project/am4u/kaede)
-[![GitHub issues](https://img.shields.io/github/issues/melgrubb/buildergenerator)](https://github.com/MelGrubb/BuilderGenerator/issues)
+[![Nuget](https://img.shields.io/nuget/dt/am4u.BuilderGenerator)](https://www.nuget.org/packages/am4u.BuilderGenerator/)
+[![GitHub](https://img.shields.io/github/license/am4u/BuilderGenerator2)](https://opensource.org/licenses/MIT)
+[![Build status](https://ci.appveyor.com/api/projects/status/ioq5c465m65hjja2?svg=true)](https://ci.appveyor.com/project/am4u/buildergen2)
 
 # BuilderGenerator2 - an updated version of BuilderGenerator #
 
-An updated version of BuilderGenerator - a .NET Source Generator by MelGrubb, that is designed to add "Builders" to your projects. [Builders](https://en.wikipedia.org/wiki/Builder_pattern) are an object creation pattern, similar to the [Object Mother](https://martinfowler.com/bliki/ObjectMother.html) pattern. Object Mothers and Builders are most commonly used to create objects for testing, but they can be used anywhere you want "canned" objects.
+An updated version of BuilderGenerator - a .NET Source Generator by MelGrubb, that is designed to add fluent builder classes to your projects. [Builders](https://en.wikipedia.org/wiki/Builder_pattern) are an object creation pattern, similar to the [Object Mother](https://martinfowler.com/bliki/ObjectMother.html) pattern. Object Mothers and Builders are most commonly used to create objects for testing, but they can be used anywhere you want "canned" objects.
 
 ## What is new? ##
 
@@ -16,7 +15,7 @@ For more complete documentation, please see the [documentation site](https://mel
 
 ## Installation ##
 
-Kaede is installed as an analyzer via a NuGet package - for more info on how to install/add this package to your solution: https://www.nuget.org/packages/Kaede/
+BuilderGenerator2 is installed as an analyzer via a NuGet package - for more info on how to install/add this package to your solution: [am4u.BuilderGenerator](https://www.nuget.org/packages/am4u.BuilderGenerator/)
 
 ## Usage ##
 
@@ -35,19 +34,19 @@ public partial class FooBuilder
 You can also add factory methods to your partial class which can craft specific data scenarios: 
 
 ```csharp
-[BuilderFor(typeof(Amogus))]
-public partial class AmogusBuilder
+[BuilderFor(typeof(Foo))]
+public partial class FooBuilder
 {
-    public static AmogusBuilder IsSus()
+    public static FooBuilder Bar()
     {
-        return new AmogusBuilder()
-            .WithIsSus(true);
+        return new FooBuilder()
+            .WithBar(true);
     }
     
-    public static AmogusBuilder IsNotSus()
+    public static AmogusBuilder NotBar()
     {
-        return new AmogusBuilder()
-            .WithIsSus(false);
+        return new FooBuilder()
+            .WithBar(false);
     }
 }
 ``` 

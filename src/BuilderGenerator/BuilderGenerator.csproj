@@ -2,77 +2,20 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>true</IsPackable>
-    <!--Is preview still Needed?-->
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>2.1.0</AssemblyVersion>
-    <FileVersion>2.1.0</FileVersion>
-    <Version>2.1.0</Version>
-    <PackageId>BuilderGenerator</PackageId>
+    <Version>1.0.0</Version>
+    <PackageId>am4u.BuilderGenerator</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Mel Grubb</Authors>
-    <Description>Generates builder classes for testing and/or seed data. Please see documentation site (https://melgrubb.github.io/BuilderGenerator/) for complete details.</Description>
-    <Copyright>2021-2022 Mel Grubb</Copyright>
-    <PackageProjectUrl>https://github.com/MelGrubb/BuilderGenerator</PackageProjectUrl>
+    <Description>Generates fluent builder classes for testing purposes or seeding data classes. Please see README (https://github.com/am4u/BuilderGenerator2) for more info.</Description>
+    <Copyright>Fork 2023 am4u. Original 2021-2022 Mel Grubb</Copyright>
+    <PackageProjectUrl>https://github.com/am4u/BuilderGenerator2</PackageProjectUrl>
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/MelGrubb/BuilderGenerator</RepositoryUrl>
+    <RepositoryUrl>https://github.com/am4u/BuilderGenerator2</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>BDD;TDD;Testing;Builders;Code Generation;Source Generators</PackageTags>
-    <PackageReleaseNotes>v2.1.0
-- Fixed #15, Builders can manipulate internals if configured to do so.
-
-v2.0.7
-- Fixed #13, NetStandard2.0 compatibility
-
-v2.0.6
-- Fixed #12, Generated files now marked with auth-generated header
-
-v2.0.5
-- Fixed #14, duplicate properties
-
-v2.0.3
-- Fixed NuGet packaging problem
-
-v2.0.2
-- Setters for base class properties rendering properly
-
-v2.0.1
-- Improved error handling
-
-v2.0.0
-- Updated to .Net 6 and IIncrementalGenerator
-- Changed usage pattern from marking target classes with attributes to marking partial builder classes
-
-v1.2.0
-- Solution reorganization
-- Version number synchronization
-- Automated build pipeline
-
-v1.0.0
-- First major release
-
-v0.5.0
-- Replaced separate BuilderGenerator.Common assembly with a generated attribute and base class.
-- NuGet package complete and working at last
-
-v0.1.4
-- Added logo
-- Builder now ignores properties without setters
-- NuGet package should auto-install analyzer now
-
-v0.1.3
-- Added Documentation site stub
-
-v0.1.2
-- Ignore read-only fields
-
-v0.1.1
-- Preview/Alpha release
-
-v0.1.0
-- Initial Release
-    </PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>

@@ -3,9 +3,9 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/ioq5c465m65hjja2?svg=true)](https://ci.appveyor.com/project/am4u/kaede)
 [![GitHub issues](https://img.shields.io/github/issues/melgrubb/buildergenerator)](https://github.com/MelGrubb/BuilderGenerator/issues)
 
-# kaede - an updated version of BuilderGenerator #
+# BuilderGenerator2 - an updated version of BuilderGenerator #
 
-Kaede is an updated version of BuilderGenerator - a .NET Source Generator by MelGrubb, that is designed to add "Builders" to your projects. [Builders](https://en.wikipedia.org/wiki/Builder_pattern) are an object creation pattern, similar to the [Object Mother](https://martinfowler.com/bliki/ObjectMother.html) pattern. Object Mothers and Builders are most commonly used to create objects for testing, but they can be used anywhere you want "canned" objects.
+An updated version of BuilderGenerator - a .NET Source Generator by MelGrubb, that is designed to add "Builders" to your projects. [Builders](https://en.wikipedia.org/wiki/Builder_pattern) are an object creation pattern, similar to the [Object Mother](https://martinfowler.com/bliki/ObjectMother.html) pattern. Object Mothers and Builders are most commonly used to create objects for testing, but they can be used anywhere you want "canned" objects.
 
 ## What is new? ##
 

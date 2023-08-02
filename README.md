@@ -27,8 +27,6 @@ The new `WithValuesFrom` method allows you to copy values from an existing insta
 new MyBuilder().WithValuesFrom(anotherObject)
 ```
 
-For more complete documentation, please see the [documentation site](https://melgrubb.github.io/BuilderGenerator/) or the raw [documentation source](https://github.com/MelGrubb/BuilderGenerator/blob/main/docs/index.md).
-
 ## Installation ##
 
 BuilderGenerator2 is installed as an analyzer via a NuGet package - for more info on how to install/add this package to your solution: [am4u.BuilderGenerator](https://www.nuget.org/packages/am4u.BuilderGenerator/)

@@ -38,4 +38,17 @@
     <None Include="LICENSE.txt" Pack="true" PackagePath="" />
     <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\BuilderBaseClass.txt" />
+    <EmbeddedResource Include="Templates\BuilderForAttribute.txt" />
+    <EmbeddedResource Include="Templates\BuilderClass.txt" />
+    <EmbeddedResource Include="Templates\BuildMethodInitializer.txt" />
+    <EmbeddedResource Include="Templates\BuildMethodSetter.txt" />
+    <EmbeddedResource Include="Templates\BuildMethodConstructorParameter.txt" />
+    <EmbeddedResource Include="Templates\PropertyDeclaration.txt" />
+    <EmbeddedResource Include="Templates\BuildMethodConstructor.txt" />
+    <EmbeddedResource Include="Templates\WithMethod.txt" />
+    <EmbeddedResource Include="Templates\WithValuesFromMethodInner.txt" />
+    <EmbeddedResource Include="Templates\WithValuesFromMethodOuter.txt" />
+  </ItemGroup>
 </Project>

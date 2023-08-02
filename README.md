@@ -8,8 +8,24 @@ An updated version of BuilderGenerator - a .NET Source Generator by MelGrubb, th
 
 ## What is new? ##
 
-* Record type support - Immutable records now work with the Source Generator
-* More soon
+### Record type support
+You can now use the `[BuilderFor]` attribute on C# record types:
+```csharp
+public record MyRecord(bool Hello);
+
+[BuilderFor(typeof(MyRecord)]
+public partial class MyRecordBuilder
+{
+}
+
+var builder = new MyRecordBuilder().WithHello(true).Build();
+```
+
+### WithValuesFrom
+The new `WithValuesFrom` method allows you to copy values from an existing instance into your builder:
+```csharp
+new MyBuilder().WithValuesFrom(anotherObject)
+```
 
 For more complete documentation, please see the [documentation site](https://melgrubb.github.io/BuilderGenerator/) or the raw [documentation source](https://github.com/MelGrubb/BuilderGenerator/blob/main/docs/index.md).
 
@@ -43,7 +59,7 @@ public partial class FooBuilder
             .WithBar(true);
     }
     
-    public static AmogusBuilder NotBar()
+    public static FooBuilder NotBar()
     {
         return new FooBuilder()
             .WithBar(false);
@@ -52,6 +68,9 @@ public partial class FooBuilder
 ``` 
 
 ## Version History ##
+- v1.1
+  - Added `WithValuesFrom` fluent method to builders
+
 - v1.0
   - Initial fork
   - Updated to include record type support

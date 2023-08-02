@@ -1,0 +1,19 @@
+﻿
+        public override {{TargetClassFullName}} Build()
+        {
+            if (Object?.IsValueCreated != true)
+            {
+                Object = new System.Lazy<{{TargetClassFullName}}>(() =>
+                {
+                    var result = new {{TargetClassFullName}}(
+{{Parameters}}
+                    );
+
+                    return result;
+                });
+
+                PostProcess(Object.Value);
+            }
+
+            return Object.Value;
+        }

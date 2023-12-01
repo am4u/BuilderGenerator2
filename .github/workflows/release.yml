@@ -5,38 +5,26 @@ on:
     branches: [ "main" ]
 
 jobs:
-  calculate-version: 
-    runs-on: ubuntu-latest
-    outputs:
-      nuGetPreReleaseTagV2: ${{ steps.gitversion.outputs.nuGetPreReleaseTagV2 }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0
-        with:
-          versionSpec: '5.x'
-      - name: Determine Version
-        uses: gittools/actions/gitversion/execute@v0
-        with:
-          useConfigFile: true
-  
   build:
-    needs: calculate-version
     runs-on: ubuntu-latest
-    env:
-      PKG_VER: ${{ needs.calculate-version.outputs.nuGetPreReleaseTagV2 }}
       
     steps:
-    - name: Display version
-      run: |
-        echo SemVer: $PKG_VER
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0
+      with:
+        versionSpec: '5.x'
+    - name: Determine Version
+      uses: gittools/actions/gitversion/execute@v0
+      with:
+        useConfigFile: true
     
     - name: Restore dependencies
       run: dotnet restore src/BuilderGenerator.sln
@@ -45,7 +33,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal src/BuilderGenerator.sln
     - name: Pack
-      run: dotnet pack -c Release -o out -p:PackageVersion=$PKG_VER
+      run: dotnet pack -c Release -o out -p:PackageVersion=${{ env.nuGetPreReleaseTagV2 }} src/BuilderGenerator/BuilderGenerator.csproj
     - name: Publish
       run: dotnet nuget push ./src/BuilderGenerator/out/*.nupkg --api-key ${NUGET_APIKEY} --source https://int.nugettest.org/v3/index.json
       env:

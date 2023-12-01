@@ -1,6 +1,6 @@
 [![Nuget](https://img.shields.io/nuget/dt/am4u.BuilderGenerator)](https://www.nuget.org/packages/am4u.BuilderGenerator/)
 [![GitHub](https://img.shields.io/github/license/am4u/BuilderGenerator2)](https://opensource.org/licenses/MIT)
-[![Build status](https://ci.appveyor.com/api/projects/status/ioq5c465m65hjja2?svg=true)](https://ci.appveyor.com/project/am4u/buildergen2)
+[![ci](https://github.com/safalin1/BuilderGenerator2/actions/workflows/ci.yml/badge.svg)](https://github.com/safalin1/BuilderGenerator2/actions/workflows/ci.yml)
 
 # BuilderGenerator2 - an updated version of BuilderGenerator #
 

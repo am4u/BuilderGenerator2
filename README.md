@@ -1,5 +1,5 @@
-[![Nuget](https://img.shields.io/nuget/dt/am4u.BuilderGenerator)](https://www.nuget.org/packages/am4u.BuilderGenerator/)
-[![GitHub](https://img.shields.io/github/license/am4u/BuilderGenerator2)](https://opensource.org/licenses/MIT)
+[![Nuget](https://img.shields.io/nuget/dt/Safalin.BuilderGenerator)](https://www.nuget.org/packages/Safalin.BuilderGenerator/)
+[![GitHub](https://img.shields.io/github/license/safalin1/BuilderGenerator2)](https://opensource.org/licenses/MIT)
 [![ci](https://github.com/safalin1/BuilderGenerator2/actions/workflows/ci.yml/badge.svg)](https://github.com/safalin1/BuilderGenerator2/actions/workflows/ci.yml)
 
 # BuilderGenerator2 - an updated version of BuilderGenerator #

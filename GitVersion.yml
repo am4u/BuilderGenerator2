@@ -3,3 +3,8 @@ increment: Minor
 ignore:
   sha: []
 update-build-number: true
+branches:
+  master:
+    regex: ^latest$
+  pull-request:
+    tag: pr

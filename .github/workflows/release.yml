@@ -5,60 +5,36 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  calculate-version: 
     runs-on: ubuntu-latest
-
+    outputs:
+      semVer: ${{ steps.gitversion.outputs.nuGetPreReleaseTagV2 }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0
+        with:
+          versionSpec: '5.x'
+      - name: Determine Version
+        uses: gittools/actions/gitversion/execute@v0
+        with:
+          useConfigFile: true
+  
+  build:
+    needs: calculate-version
+    runs-on: ubuntu-latest
+    env:
+      PKG_VER: ${{ needs.calculate-version.outputs.nuGetPreReleaseTagV2 }}
+      
     steps:
     - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0
-      with:
-        versionSpec: '5.x'
-    - name: Determine Version
-      uses: gittools/actions/gitversion/execute@v0
-      with:
-        useConfigFile: true
-    - name: Display GitVersion variables (without prefix)
-      run: |
-        echo "Major: ${{ env.major }}"
-        echo "Minor: ${{ env.minor }}"
-        echo "Patch: ${{ env.patch }}"
-        echo "PreReleaseTag: ${{ env.preReleaseTag }}"
-        echo "PreReleaseTagWithDash: ${{ env.preReleaseTagWithDash }}"
-        echo "PreReleaseLabel: ${{ env.preReleaseLabel }}"
-        echo "PreReleaseNumber: ${{ env.preReleaseNumber }}"
-        echo "WeightedPreReleaseNumber: ${{ env.weightedPreReleaseNumber }}"
-        echo "BuildMetaData: ${{ env.buildMetaData }}"
-        echo "BuildMetaDataPadded: ${{ env.buildMetaDataPadded }}"
-        echo "FullBuildMetaData: ${{ env.fullBuildMetaData }}"
-        echo "MajorMinorPatch: ${{ env.majorMinorPatch }}"
-        echo "SemVer: ${{ env.semVer }}"
-        echo "LegacySemVer: ${{ env.legacySemVer }}"
-        echo "LegacySemVerPadded: ${{ env.legacySemVerPadded }}"
-        echo "AssemblySemVer: ${{ env.assemblySemVer }}"
-        echo "AssemblySemFileVer: ${{ env.assemblySemFileVer }}"
-        echo "FullSemVer: ${{ env.fullSemVer }}"
-        echo "InformationalVersion: ${{ env.informationalVersion }}"
-        echo "BranchName: ${{ env.branchName }}"
-        echo "EscapedBranchName: ${{ env.escapedBranchName }}"
-        echo "Sha: ${{ env.sha }}"
-        echo "ShortSha: ${{ env.shortSha }}"
-        echo "NuGetVersionV2: ${{ env.nuGetVersionV2 }}"
-        echo "NuGetVersion: ${{ env.nuGetVersion }}"
-        echo "NuGetPreReleaseTagV2: ${{ env.nuGetPreReleaseTagV2 }}"
-        echo "NuGetPreReleaseTag: ${{ env.nuGetPreReleaseTag }}"
-        echo "VersionSourceSha: ${{ env.versionSourceSha }}"
-        echo "CommitsSinceVersionSource: ${{ env.commitsSinceVersionSource }}"
-        echo "CommitsSinceVersionSourcePadded: ${{ env.commitsSinceVersionSourcePadded }}"
-        echo "UncommittedChanges: ${{ env.uncommittedChanges }}"
-        echo "CommitDate: ${{ env.commitDate }}"
+    
     - name: Restore dependencies
       run: dotnet restore src/BuilderGenerator.sln
     - name: Build
@@ -66,7 +42,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal src/BuilderGenerator.sln
     - name: Pack
-      run: dotnet pack -c Release -o out -p:PackageVersion=${{ env.nuGetVersionV2 }}
+      run: dotnet pack -c Release -o out -p:PackageVersion=$PKG_VER
     - name: Publish
       run: dotnet nuget push ./src/BuilderGenerator/out/*.nupkg --api-key ${NUGET_APIKEY} --source https://int.nugettest.org/v3/index.json
       env:

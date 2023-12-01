@@ -5,6 +5,6 @@ ignore:
 update-build-number: true
 branches:
   master:
-    regex: ^latest$
+    regex: ^main$
   pull-request:
     tag: pr

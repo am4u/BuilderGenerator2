@@ -8,7 +8,7 @@ jobs:
   calculate-version: 
     runs-on: ubuntu-latest
     outputs:
-      semVer: ${{ steps.gitversion.outputs.nuGetPreReleaseTagV2 }}
+      nuGetPreReleaseTagV2: ${{ steps.gitversion.outputs.nuGetPreReleaseTagV2 }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -29,6 +29,9 @@ jobs:
       PKG_VER: ${{ needs.calculate-version.outputs.nuGetPreReleaseTagV2 }}
       
     steps:
+    - name: Display version
+      run: |
+        echo SemVer: $PKG_VER
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3

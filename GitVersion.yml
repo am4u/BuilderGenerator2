@@ -1,0 +1,5 @@
+mode: Mainline
+increment: Minor
+ignore:
+  sha: []
+update-build-number: true

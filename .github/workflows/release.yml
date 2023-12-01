@@ -2,8 +2,7 @@ name: release
 
 on:
   push:
-    tags:
-      - "*"
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -67,7 +66,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal src/BuilderGenerator.sln
     - name: Pack
-      run: dotnet pack -c Release -o out -p:PackageVersion=2.1.0
+      run: dotnet pack -c Release -o out -p:PackageVersion=${{ env.nuGetVersionV2 }}
     - name: Publish
       run: dotnet nuget push ./src/BuilderGenerator/out/*.nupkg --api-key ${NUGET_APIKEY} --source https://int.nugettest.org/v3/index.json
       env:

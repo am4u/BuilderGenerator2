@@ -33,7 +33,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal src/BuilderGenerator.sln
     - name: Pack
-      run: dotnet pack -c Release -o out -p:PackageVersion=${{ env.nuGetPreReleaseTagV2 }} src/BuilderGenerator/BuilderGenerator.csproj
+      run: dotnet pack -c Release -o out -p:PackageVersion=${{ env.GitVersion_NuGetVersionV2 }} src/BuilderGenerator/BuilderGenerator.csproj
     - name: Publish
       run: dotnet nuget push ./src/BuilderGenerator/out/*.nupkg --api-key ${NUGET_APIKEY} --source https://int.nugettest.org/v3/index.json
       env:

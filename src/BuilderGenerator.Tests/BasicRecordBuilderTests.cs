@@ -73,7 +73,7 @@ public class BasicRecordBuilderTests
             .WithValuesFrom(otherInstance)
             .WithParameterThree(threeUpdated);
 
-        var expected = new BasicRecord(one, two, three);
+        var expected = new BasicRecord(one, two, threeUpdated);
 
         // Act
         var actual = builder.Build();

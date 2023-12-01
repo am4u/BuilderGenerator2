@@ -8,12 +8,7 @@ namespace BuilderGenerator.Tests;
 
 public class BasicClassBuilderTests
 {
-    private readonly Faker _faker;
-
-    public BasicClassBuilderTests()
-    {
-        _faker = new Faker();
-    }
+    private readonly Faker _faker = new();
 
     [Fact]
     public void Builder_WhenConstructed_ShouldHaveDefaults()

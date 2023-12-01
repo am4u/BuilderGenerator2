@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using BuilderGenerator.Diagnostics;
+using BuilderGenerator.Generation;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
@@ -16,7 +17,7 @@ internal class BuilderGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var classDeclarations = context.SyntaxProvider.CreateSyntaxProvider(Predicate, Transform).Where(static node => node is not null);
+        var classDeclarations = context.SyntaxProvider.CreateSyntaxProvider(WhereTypeHasAttributes, GetTypesWithBuilderForAttribute).Where(static node => node is not null);
         var compilationAndClasses = context.CompilationProvider.Combine(classDeclarations.Collect());
         context.RegisterSourceOutput(compilationAndClasses, static (spc, source) => Execute(source.Item1, source.Item2!, spc));
 
@@ -63,40 +64,30 @@ internal class BuilderGenerator : IIncrementalGenerator
                     continue;
                 }
 
-                var targetClassType = attributeSymbol.ConstructorArguments[0];
-                var targetClassName = ((ISymbol)targetClassType.Value!).Name;
-                var targetClassFullName = targetClassType.Value!.ToString();
                 var includeInternals = (bool)attributeSymbol.ConstructorArguments[1].Value!;
 
-                var targetClassProperties = GetPropertySymbols((INamedTypeSymbol)targetClassType.Value, includeInternals)
-                    .Select<IPropertySymbol, (string Name, string TypeName)>(x => new ValueTuple<string, string>(x.Name, x.Type.ToString()))
-                    .Distinct()
-                    .OrderBy(x => x.Name)
-                    .ToList();
+                var classDescriptor = new ClassDescriptor(attributeSymbol.ConstructorArguments[0]);
 
+                var targetClassProperties = classDescriptor.GetProperties(includeInternals);
                 var builderClassName = typeSymbol.Name;
-                var targetClassIsRecord = ((INamedTypeSymbol)targetClassType.Value).IsRecord;
-                var builderClassNamespace = typeSymbol.ContainingNamespace.ToString();
-                var builderClassUsingBlock = ((CompilationUnitSyntax)typeDeclaration.SyntaxTree.GetRoot()).Usings.ToString();
-                var builderClassAccessibility = typeSymbol.DeclaredAccessibility.ToString().ToLower();
 
                 templateParser.SetTag("GeneratedAt", DateTime.Now.ToString("s"));
-                templateParser.SetTag("BuilderClassUsingBlock", builderClassUsingBlock);
-                templateParser.SetTag("BuilderClassNamespace", builderClassNamespace);
-                templateParser.SetTag("BuilderClassAccessibility", builderClassAccessibility);
+                templateParser.SetTag("BuilderClassUsingBlock", ((CompilationUnitSyntax)typeDeclaration.SyntaxTree.GetRoot()).Usings.ToString());
+                templateParser.SetTag("BuilderClassNamespace", typeSymbol.ContainingNamespace.ToString());
+                templateParser.SetTag("BuilderClassAccessibility", typeSymbol.DeclaredAccessibility.ToString().ToLower());
                 templateParser.SetTag("BuilderClassName", builderClassName);
-                templateParser.SetTag("TargetClassName", targetClassName);
-                templateParser.SetTag("TargetClassFullName", targetClassFullName);
+                templateParser.SetTag("TargetClassName", classDescriptor.Name);
+                templateParser.SetTag("TargetClassFullName", classDescriptor.FullName);
 
-                var builderClassProperties = GenerateProperties(templateParser, targetClassProperties);
-                var builderClassBuildMethod = GenerateBuildMethod(templateParser, targetClassProperties, targetClassIsRecord);
-                var builderClassWithMethods = GenerateWithMethods(templateParser, targetClassProperties);
-                var builderClassWithValueFromMethod = GenerateWithValuesFromMethod(templateParser, targetClassProperties);
+                var properties = GenerateProperties(templateParser, targetClassProperties);
+                var buildMethod = GenerateBuildMethod(templateParser, targetClassProperties, classDescriptor.IsRecord);
+                var withMethods = GenerateWithMethods(templateParser, targetClassProperties);
+                var valueFormMethod = GenerateWithValuesFromMethod(templateParser, targetClassProperties);
 
-                templateParser.SetTag("Properties", builderClassProperties);
-                templateParser.SetTag("BuildMethod", builderClassBuildMethod);
-                templateParser.SetTag("WithMethods", builderClassWithMethods);
-                templateParser.SetTag("WithValueFromMethod", builderClassWithValueFromMethod);
+                templateParser.SetTag("Properties", properties);
+                templateParser.SetTag("BuildMethod", buildMethod);
+                templateParser.SetTag("WithMethods", withMethods);
+                templateParser.SetTag("WithValueFromMethod", valueFormMethod);
 
                 var source = templateParser.ParseString(EmbeddedResourceProvider.GetResourceByName("Templates.BuilderClass.txt"));
 
@@ -109,20 +100,22 @@ internal class BuilderGenerator : IIncrementalGenerator
         }
     }
 
-    private static string GenerateBuildMethod(TemplateParser templateParser, IEnumerable<(string Name, string TypeName)> properties, bool isRecord)
+    private static string GenerateBuildMethod(TemplateParser templateParser, List<ClassProperty> properties, bool isRecord)
     {
+        var classProperties = properties.ToArray();
+
         if (isRecord)
         {
             var parameters = string.Join(
                 Environment.NewLine,
-                properties.Select(
+                classProperties.Select(
                     (x, i) =>
                     {
                         templateParser.SetTag("PropertyName", x.Name);
 
                         var value = templateParser.ParseString(EmbeddedResourceProvider.GetResourceByName("Templates.BuildMethodConstructorParameter.txt"));
 
-                        if (i == properties.Count() - 1)
+                        if (i == classProperties.Length - 1)
                         {
                             value = value.TrimEnd(',');
                         }
@@ -139,7 +132,7 @@ internal class BuilderGenerator : IIncrementalGenerator
         {
             var setters = string.Join(
                 Environment.NewLine,
-                properties.Select(
+                classProperties.Select(
                     x =>
                     {
                         templateParser.SetTag("PropertyName", x.Name);
@@ -154,7 +147,7 @@ internal class BuilderGenerator : IIncrementalGenerator
         }
     }
 
-    private static string GenerateProperties(TemplateParser templateParser, IEnumerable<(string Name, string TypeName)> properties)
+    private static string GenerateProperties(TemplateParser templateParser, List<ClassProperty> properties)
     {
         var result = string.Join(
             Environment.NewLine,
@@ -170,7 +163,7 @@ internal class BuilderGenerator : IIncrementalGenerator
         return result;
     }
 
-    private static string GenerateWithMethods(TemplateParser templateParser, IEnumerable<(string Name, string TypeName)> properties)
+    private static string GenerateWithMethods(TemplateParser templateParser, List<ClassProperty> properties)
     {
         var result = string.Join(
             Environment.NewLine,
@@ -186,7 +179,7 @@ internal class BuilderGenerator : IIncrementalGenerator
         return result;
     }
 
-    private static string GenerateWithValuesFromMethod(TemplateParser templateParser, IEnumerable<(string Name, string TypeName)> properties)
+    private static string GenerateWithValuesFromMethod(TemplateParser templateParser, List<ClassProperty> properties)
     {
         var withMethodCalls = string.Join(
             Environment.NewLine,
@@ -204,27 +197,10 @@ internal class BuilderGenerator : IIncrementalGenerator
         return result;
     }
 
-    private static IEnumerable<IPropertySymbol> GetPropertySymbols(INamedTypeSymbol namedTypeSymbol, bool includeInternals)
-    {
-        var symbols = namedTypeSymbol.GetMembers()
-            .OfType<IPropertySymbol>()
-            .Where(x => x.SetMethod is not null && (x.SetMethod.DeclaredAccessibility == Accessibility.Public || (includeInternals && x.SetMethod.DeclaredAccessibility == Accessibility.Internal)))
-            .ToList();
+    private static bool WhereTypeHasAttributes(SyntaxNode node, CancellationToken _)
+        => node is TypeDeclarationSyntax { AttributeLists.Count: > 0 };
 
-        var baseTypeSymbol = namedTypeSymbol.BaseType;
-
-        while (baseTypeSymbol != null)
-        {
-            symbols.AddRange(GetPropertySymbols(baseTypeSymbol, includeInternals));
-            baseTypeSymbol = baseTypeSymbol.BaseType;
-        }
-
-        return symbols;
-    }
-
-    private static bool Predicate(SyntaxNode node, CancellationToken _) => node is TypeDeclarationSyntax { AttributeLists.Count: > 0 };
-
-    private static TypeDeclarationSyntax? Transform(GeneratorSyntaxContext context, CancellationToken token)
+    private static TypeDeclarationSyntax? GetTypesWithBuilderForAttribute(GeneratorSyntaxContext context, CancellationToken token)
     {
         var node = context.Node;
 
@@ -242,11 +218,8 @@ internal class BuilderGenerator : IIncrementalGenerator
             return null;
         }
 
-        if (namedTypeSymbol.GetAttributes().Any(x => x.AttributeClass?.Name == "BuilderForAttribute"))
-        {
-            return typeNode;
-        }
-
-        return null;
+        return namedTypeSymbol.GetAttributes().Any(x => x.AttributeClass?.Name == "BuilderForAttribute")
+            ? typeNode
+            : null;
     }
 }

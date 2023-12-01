@@ -1,4 +1,7 @@
 ﻿
+        /// <summary>
+        /// Gets an instance of {{TargetClassName}} with all builder values applied
+        /// </summary>
         public override {{TargetClassFullName}} Build()
         {
             if (Object?.IsValueCreated != true)

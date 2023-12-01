@@ -1,4 +1,7 @@
 ﻿
+        /// <summary>
+        /// Copies all property values from <paramref name="instance"/> and applies it to this builder.
+        /// </summary>
         public {{BuilderClassName}} WithValuesFrom({{TargetClassFullName}} instance)
         {
 {{WithMethods}}

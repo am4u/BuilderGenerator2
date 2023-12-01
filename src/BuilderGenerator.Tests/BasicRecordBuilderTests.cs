@@ -8,12 +8,7 @@ namespace BuilderGenerator.Tests;
 
 public class BasicRecordBuilderTests
 {
-    private readonly Faker _faker;
-
-    public BasicRecordBuilderTests()
-    {
-        _faker = new Faker();
-    }
+    private readonly Faker _faker = new();
 
     [Fact]
     public void Builder_WhenConstructed_ShouldHaveDefaults()
@@ -66,24 +61,19 @@ public class BasicRecordBuilderTests
         var two = _faker.Random.Bool();
         var three = _faker.Random.String();
 
-        var otherInstance = new BasicClassBuilder()
-            .WithProperty1(one)
-            .WithProperty2(two)
-            .WithProperty3(three)
+        var otherInstance = new BasicRecordBuilder()
+            .WithParameterOne(one)
+            .WithParameterTwo(two)
+            .WithParameterThree(three)
             .Build();
 
         var threeUpdated = _faker.Random.String();
 
-        var builder = new BasicClassBuilder()
+        var builder = new BasicRecordBuilder()
             .WithValuesFrom(otherInstance)
-            .WithProperty3(threeUpdated);
+            .WithParameterThree(threeUpdated);
 
-        var expected = new BasicClass
-        {
-            Property1 = one,
-            Property2 = two,
-            Property3 = threeUpdated
-        };
+        var expected = new BasicRecord(one, two, three);
 
         // Act
         var actual = builder.Build();

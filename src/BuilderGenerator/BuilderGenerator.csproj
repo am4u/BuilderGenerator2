@@ -5,15 +5,15 @@
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <Version>1.0.0</Version>
-    <PackageId>am4u.BuilderGenerator</PackageId>
+    <PackageId>Safalin.BuilderGenerator</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>Mel Grubb</Authors>
+    <Authors>Safalin, Mel Grubb</Authors>
     <Description>Generates fluent builder classes for testing purposes or seeding data classes. Please see README (https://github.com/am4u/BuilderGenerator2) for more info.</Description>
-    <Copyright>Fork 2023 am4u. Original 2021-2022 Mel Grubb</Copyright>
-    <PackageProjectUrl>https://github.com/am4u/BuilderGenerator2</PackageProjectUrl>
+    <Copyright>Fork by Safalin. Original 2021-2022 Mel Grubb</Copyright>
+    <PackageProjectUrl>https://github.com/safalin1/BuilderGenerator2</PackageProjectUrl>
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/am4u/BuilderGenerator2</RepositoryUrl>
+    <RepositoryUrl>https://github.com/safalin1/BuilderGenerator2</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>BDD;TDD;Testing;Builders;Code Generation;Source Generators</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
